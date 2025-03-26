@@ -13,14 +13,12 @@ const userSchema = new mongoose.Schema(
         },
         lastName: {
             type: String,
-            required: true,
+            required: false,
         },
-        password: {
-            type: String,
-            required: true,
-            minLength: 6
-        },
-        placesVisited: [PlacesSchema]
+        present: {
+            type: Boolean,
+            default: false
+        }
     },
     {
         timestamps: true
