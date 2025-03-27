@@ -75,7 +75,7 @@ router.post("/verify", async (req, res) => {
     const { qrBufferFinal, qrLink, uuid } = await generateQR(email, user);
     user.otp = null;
     user.otpExpires = null;
-    await user.save(); 
+ 
 
     const mailOptions = {
       from: process.env.EMAIL,
@@ -92,6 +92,7 @@ router.post("/verify", async (req, res) => {
 
     await transporter.sendMail(mailOptions);
     user.registered = true;
+    await user.save(); 
     res.json({ message: "OTP verified. Registration complete. QR code sent." });
   } catch (error) {
     res.status(500).json({ error: error.message });
