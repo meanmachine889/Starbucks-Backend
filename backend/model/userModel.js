@@ -1,30 +1,14 @@
 import mongoose from "mongoose";
+import { v4 as uuidv4 } from "uuid";
 
-const userSchema = new mongoose.Schema(
-    {
-        email: {
-            type: String,
-            required: true,
-            unique: true
-        },
-        firstName: {
-            type: String,
-            required: true,
-        },
-        lastName: {
-            type: String,
-            required: false,
-        },
-        present: {
-            type: Boolean,
-            default: false
-        }
-    },
-    {
-        timestamps: true
-    }
-)
+const userSchema = new mongoose.Schema({
+  id: { type: String, unique: true, default: uuidv4 },
+  name: String,
+  email: { type: String, unique: true, required: true },
+  otp: String,
+  otpExpires: { type: Date }, 
+  registered: { type: Boolean, default: false },
+  present: { type: Boolean, default: false },
+});
 
-const User = mongoose.model('User', userSchema)
-
-export default User
+export default mongoose.model("User", userSchema);
