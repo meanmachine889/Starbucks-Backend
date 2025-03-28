@@ -27,7 +27,7 @@ router.post("/register", async (req, res) => {
   try {
     let user = await User.findOne({ email });
     if (user && user.registered) {
-      return res.status(400).json({ message: "User already registered. Please log in." });
+      return res.status(400).json({ message: "User already registered. Please check your email" });
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();

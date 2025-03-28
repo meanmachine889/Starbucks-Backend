@@ -7,7 +7,9 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const logoPath = path.join(__dirname, "mttn.jpg");
+
+const logoPath = path.join(__dirname, "..", "public", "mttn.jpg");
+
 
 export const generateQR = async (email, user) => {
   try {
@@ -19,7 +21,7 @@ export const generateQR = async (email, user) => {
 
     const qrImage = await QRCode.toDataURL(qrLink, {
       errorCorrectionLevel: "H",
-      width: 400,
+      width: 600,
       margin: 2,
       color: {
         dark: "#000000",
@@ -27,11 +29,11 @@ export const generateQR = async (email, user) => {
       },
     });
 
-    const canvas = createCanvas(400, 400);
+    const canvas = createCanvas(600, 600);
     const ctx = canvas.getContext("2d");
 
     const qrImg = await loadImage(qrImage);
-    ctx.drawImage(qrImg, 0, 0, 400, 400);
+    ctx.drawImage(qrImg, 0, 0, 600, 600);
 
     let logoImg;
     try {
@@ -41,7 +43,7 @@ export const generateQR = async (email, user) => {
     }
 
     if (logoImg) {
-      const logoSize = 120;
+      const logoSize = 220;
       const logoX = (canvas.width - logoSize) / 2;
       const logoY = (canvas.height - logoSize) / 2;
 
