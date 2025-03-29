@@ -13,11 +13,11 @@ const logoPath = path.join(__dirname, "..", "public", "mttn.jpg");
 
 export const generateQR = async (email, user) => {
   try {
-    if (!user.uuid) {
-      user.uuid = uuidv4();
+    if (!user.id) {
+      user.id = uuidv4();
     }
 
-    const qrLink = `https://www.manipalthetalk.org/${user.uuid}`;
+    const qrLink = `https://www.manipalthetalk.org/${user.id}`;
 
     const qrImage = await QRCode.toDataURL(qrLink, {
       errorCorrectionLevel: "H",
@@ -56,7 +56,7 @@ export const generateQR = async (email, user) => {
     const qrBufferFinal = canvas.toBuffer("image/png");
     const finalImage = canvas.toDataURL("image/png");
 
-    return { qrImage: finalImage, qrBufferFinal, qrLink, uuid: user.uuid };
+    return { qrImage: finalImage, qrBufferFinal, qrLink, uuid: user.id };
   } catch (error) {
     throw new Error("Error generating QR Code with logo: " + error.message);
   }
