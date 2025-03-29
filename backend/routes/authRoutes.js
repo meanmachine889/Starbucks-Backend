@@ -80,8 +80,20 @@ router.post("/verify", async (req, res) => {
     const mailOptions = {
       from: process.env.EMAIL,
       to: email,
-      subject: "Your QR Code",
-      html: `<p>Scan this QR code to access your page:</p><a href="${qrLink}"><img src="cid:qrcode" /></a>`,
+      subject: "Your Starbucks QR Code",
+      html: `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; text-align: center; color: #333;">
+          <h1 style="color: #006241;">Thanks for registering!</h1>
+          <p>Here is your Starbucks QR code. Scan it to access your page and enjoy exclusive offers!</p>
+          <div style="margin: 20px 0;">
+            <a href="${qrLink}" style="text-decoration: none;">
+              <img src="cid:qrcode" alt="QR Code" style="width: 200px; height: 200px; border-radius: 10px;" />
+            </a>
+          </div>
+          <p>Need help? Contact us at <a href="mailto:support@starbucks.com">support@starbucks.com</a></p>
+          <p style="font-size: 12px; color: #777;">This email was sent automatically. Please do not reply.</p>
+        </div>
+      `,
       attachments: [{
         filename: "qrcode.png",
         content: qrBufferFinal,
