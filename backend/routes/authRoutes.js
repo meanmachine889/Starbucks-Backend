@@ -76,11 +76,7 @@ router.post("/verify", async (req, res) => {
 
     if (user.otp !== otp)
       return res.status(400).json({ message: "Invalid OTP" });
-    console.log(user);
-    console.log(user.id);
     const { qrBufferFinal, qrLink, uuid } = await generateQR(user);
-    console.log(uuid);
-    console.log(qrLink);
     user.otp = null;
     user.otpExpires = null;
 
@@ -114,7 +110,7 @@ router.post("/verify", async (req, res) => {
     await transporter.sendMail(mailOptions);
     user.registered = true;
     await user.save();
-    res.json({ message: "OTP verified. Registration complete. QR code sent." });
+    res.json({ message: "OTP verified. Registration complete. QR code sent.", data: { id: user.id, email: user.email } });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
