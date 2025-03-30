@@ -2,7 +2,7 @@ import express from "express";
 import User from "../model/userModel.js";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
-import { generateQR } from "../utils/qrGenerator.js"; 
+import { generateQR } from "../utils/qrGenerator.js";
 dotenv.config();
 const router = express.Router();
 
@@ -27,7 +27,9 @@ router.post("/register", async (req, res) => {
   try {
     let user = await User.findOne({ email });
     if (user && user.registered) {
-      return res.status(400).json({ message: "User already registered. Please check your email" });
+      return res
+        .status(400)
+        .json({ message: "User already registered. Please check your email" });
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -50,12 +52,13 @@ router.post("/register", async (req, res) => {
     };
 
     await transporter.sendMail(mailOptions);
-    res.json({ message: "OTP sent successfully. Verify OTP to complete registration." });
+    res.json({
+      message: "OTP sent successfully. Verify OTP to complete registration.",
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
-
 
 router.post("/verify", async (req, res) => {
   const { email, otp } = req.body;
@@ -66,16 +69,20 @@ router.post("/verify", async (req, res) => {
     if (!user) return res.status(400).json({ message: "User not found" });
 
     if (!user.otpExpires || new Date() > user.otpExpires) {
-      return res.status(400).json({ message: "OTP expired. Please request a new one." });
+      return res
+        .status(400)
+        .json({ message: "OTP expired. Please request a new one." });
     }
 
-    if (user.otp !== otp) return res.status(400).json({ message: "Invalid OTP" });
-
-    // Generate QR Code
-    const { qrBufferFinal, qrLink, uuid } = await generateQR(email, user);
+    if (user.otp !== otp)
+      return res.status(400).json({ message: "Invalid OTP" });
+    console.log(user);
+    console.log(user.id);
+    const { qrBufferFinal, qrLink, uuid } = await generateQR(user);
+    console.log(uuid);
+    console.log(qrLink);
     user.otp = null;
     user.otpExpires = null;
- 
 
     const mailOptions = {
       from: process.env.EMAIL,
@@ -94,18 +101,36 @@ router.post("/verify", async (req, res) => {
           <p style="font-size: 12px; color: #777;">This email was sent automatically. Please do not reply.</p>
         </div>
       `,
-      attachments: [{
-        filename: "qrcode.png",
-        content: qrBufferFinal,
-        encoding: "base64",
-        cid: "qrcode",
-      }],
+      attachments: [
+        {
+          filename: "qrcode.png",
+          content: qrBufferFinal,
+          encoding: "base64",
+          cid: "qrcode",
+        },
+      ],
     };
 
     await transporter.sendMail(mailOptions);
     user.registered = true;
-    await user.save(); 
+    await user.save();
     res.json({ message: "OTP verified. Registration complete. QR code sent." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/user", async (req, res) => {
+  const { id } = req.query;
+
+  try {
+    const user = await User.findOne({ id });
+
+    if (!user) {
+      return res.json([]);
+    }
+
+    res.json({ name: user.name, email: user.email });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

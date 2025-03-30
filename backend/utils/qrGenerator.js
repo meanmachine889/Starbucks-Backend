@@ -11,13 +11,13 @@ const __dirname = path.dirname(__filename);
 const logoPath = path.join(__dirname, "..", "public", "mttn.jpg");
 
 
-export const generateQR = async (email, user) => {
+export const generateQR = async (user) => {
   try {
     if (!user.id) {
       user.id = uuidv4();
     }
 
-    const qrLink = `https://www.manipalthetalk.org/${user.id}`;
+    const qrLink = `https://starbucks-mttn.vercel.app/congratulations?id=${user.id}`;
 
     const qrImage = await QRCode.toDataURL(qrLink, {
       errorCorrectionLevel: "H",
