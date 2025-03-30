@@ -4,9 +4,7 @@ const router = express.Router();
 router.put("/check-in/:id", async (req, res) => {
   try {
       const { id } = req.params;
-      const user = await User.findOne({  id });
-      console.log(id);
-      console.log(user);
+      const user = await User.findOne({ id }).lean();
       if (!user) return res.status(404).json({ message: "User not Found" });
       if (user.present) return res.status(400).json({ message: "Duplicate Entry : Already marked present" });
 
