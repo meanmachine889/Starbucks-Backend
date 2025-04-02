@@ -152,7 +152,7 @@ router.get("/user", async (req, res) => {
       return res.json([]);
     }
 
-    res.json({ name: user.name, email: user.email });
+    res.json({ name: user.name, email: user.email, confirmed: user.wantsFood, mobile: user.otp });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -164,6 +164,109 @@ router.get("/get-users-length", async (req, res) => {
     res.status(200).json({length: length});
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+
+router.post("/send-confirmation", async (req, res) => {
+  try {
+    const users = await User.find({});
+    
+    for (const user of users) {
+      const confirmationLink = `https://events.manipalthetalk.org/congratulations?id=${user.id}`;
+
+      const mailOptions = {
+        from: process.env.EMAIL,
+        to: user.email,
+        subject: "Confirm Your Presence - MTTN x Starbucks Acoustic Night",
+        html: `
+          <div style="font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; text-align: center; color: #333;">
+            <h1 style="color: #006241;">Confirm Your Attendance</h1>
+            <p>We’re excited to see you at the MTTN x Starbucks Acoustic Night! Please confirm your presence by clicking the button below.</p>
+            <div style="margin: 20px 0;">
+              <a href="${confirmationLink}" 
+                style="display: inline-block; 
+                        background-color: #006241; 
+                        color: white; 
+                        padding: 12px 24px; 
+                        text-decoration: none; 
+                        border-radius: 25px; 
+                        font-weight: bold;">
+                Confirm Attendance
+              </a>
+            </div>
+            <p> Please make sure to arrive by 7:15 PM, as we won't be able to hold reservations past 7:30 PM. We can't wait to see you there! </p>
+            <p>If you do not confirm, your booking will be canceled.</p>
+            <p>Need help? Contact us at <a href="mailto:bdpr.mttn@gmail.com">bdpr.mttn@gmail.com</a></p>
+            <p style="font-size: 12px; color: #777;">This email was sent automatically. Please do not reply.</p>
+          </div>
+        `,
+      };
+      
+      await transporter.sendMail(mailOptions);
+    }
+    
+    res.json({ message: "Confirmation emails sent to all users." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Route to handle confirmation link click
+router.post("/confirm-attendance/:email/:mobile", async (req, res) => {
+  try {
+    const { email, mobile } = req.params;
+
+    if (!mobile || mobile.length !== 10) {
+      return res.status(400).json({ message: "Invalid mobile number. It should be 10 digits long." });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!(user.otp == null || user.otp == "") || !user.registered) return res.status(404).json({ message: "You have not registered" });
+
+    user.wantsFood = true;
+    user.otp = mobile;
+    await user.save();
+
+    res.send("Thank you for confirming your attendance!");
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+router.post("/cancel-attendance/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    const user = await User.findOne({email});
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user.registered) return res.status(404).json({ message: "You have not registered" });
+
+    user.wantsFood = false;
+    user.otp = null;
+    await user.save();
+
+    res.send("Attendance cancel!");
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+router.post("/verify-confirmation/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    const user = await User.findOne({email});
+
+    if (!user) return res.status(404).json({ message: "User not found" }); 
+
+    const confirmed = user.wantsFood;
+    res.status(200).json({ confirmed: confirmed });
+  } catch(err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
