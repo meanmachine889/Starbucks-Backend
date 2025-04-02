@@ -17,7 +17,7 @@ export const generateQR = async (user) => {
       user.id = uuidv4();
     }
 
-    const qrLink = `https://starbucks-mttn.vercel.app/congratulations?id=${user.id}`;
+    const qrLink = `https://events.manipalthetalk.org/congratulations?id=${user.id}`;
 
     const qrImage = await QRCode.toDataURL(qrLink, {
       errorCorrectionLevel: "H",

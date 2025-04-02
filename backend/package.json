@@ -4,7 +4,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build": "mkdir -p public && cp mttn.jpg public/"
+    "build": "mkdir -p public && cp mttn.jpg public/",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",

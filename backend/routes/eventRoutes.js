@@ -1,6 +1,8 @@
 import express from "express";
 import User from "../model/userModel.js";
+
 const router = express.Router();
+
 router.put("/check-in/:id", async (req, res) => {
   try {
       const { id } = req.params;
@@ -15,7 +17,5 @@ router.put("/check-in/:id", async (req, res) => {
       res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 });
-
-
 
 export default router;
