@@ -101,10 +101,22 @@ router.post("/verify", async (req, res) => {
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; text-align: center; color: #333;">
           <h1 style="color: #006241;">Thanks for registering!</h1>
-          <p>Here is your MTTNxStarbucks QR code. Scan it to access your page and enjoy exclusive offers!</p>
+          <p>Here is your ticket for MTTN x Starbucks Acoustic Night. Please arrive by 7:15 PM. Your booking will not be held past 7:30 PM.</p>
           <div style="margin: 20px 0;">
             <a href="${qrLink}" style="text-decoration: none;">
               <img src="cid:qrcode" alt="QR Code" style="width: 200px; height: 200px; border-radius: 10px;" />
+            </a>
+          </div>
+          <div style="margin: 20px 0;">
+            <a href="https://www.starbucks.com/menu" 
+              style="display: inline-block; 
+                      background-color: #006241; 
+                      color: white; 
+                      padding: 12px 24px; 
+                      text-decoration: none; 
+                      border-radius: 25px; 
+                      font-weight: bold;">
+              Explore Menu
             </a>
           </div>
           <p>Need help? Contact us at <a href="mailto:bdpr.mttn@gmail.com">bdpr.mttn@gmail.com</a></p>
