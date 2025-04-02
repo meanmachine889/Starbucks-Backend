@@ -47,8 +47,22 @@ router.post("/register", async (req, res) => {
     const mailOptions = {
       from: process.env.EMAIL,
       to: email,
-      subject: "Your OTP Code",
-      text: `Your OTP is: ${otp}. It will expire in 5 minutes.`,
+      subject: "Your OTP Code for MTTNxStarbucks",
+      text: `Your OTP is: ${otp}. It will expire in 5 minutes.`, // Fallback plain text
+      html: `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; text-align: center; color: #333;">
+          <h1 style="color: #006241;">Welcome to MTTNxStarbucks!</h1>
+          <p>Your One-Time Password (OTP) is:</p>
+          <h2 style="color: #006241; font-size: 32px; letter-spacing: 5px;">${otp}</h2>
+          <p>This code will expire in 5 minutes.</p>
+          <div style="margin: 20px 0; padding: 15px; background-color: #f8f8f8; border-radius: 5px;">
+            <p style="margin: 0; color: #666;">If you didn't request this OTP, please ignore this email.</p>
+          </div>
+          <p style="font-size: 12px; color: #777; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+            This is an automated message from MTTNxStarbucks. Please do not reply.
+          </p>
+        </div>
+      `
     };
 
     await transporter.sendMail(mailOptions);
@@ -83,17 +97,17 @@ router.post("/verify", async (req, res) => {
     const mailOptions = {
       from: process.env.EMAIL,
       to: email,
-      subject: "Your Starbucks QR Code",
+      subject: "Your MTTNxStarbucks QR Code",
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; text-align: center; color: #333;">
           <h1 style="color: #006241;">Thanks for registering!</h1>
-          <p>Here is your Starbucks QR code. Scan it to access your page and enjoy exclusive offers!</p>
+          <p>Here is your MTTNxStarbucks QR code. Scan it to access your page and enjoy exclusive offers!</p>
           <div style="margin: 20px 0;">
             <a href="${qrLink}" style="text-decoration: none;">
               <img src="cid:qrcode" alt="QR Code" style="width: 200px; height: 200px; border-radius: 10px;" />
             </a>
           </div>
-          <p>Need help? Contact us at <a href="mailto:support@starbucks.com">support@starbucks.com</a></p>
+          <p>Need help? Contact us at <a href="mailto:bdpr.mttn@gmail.com">bdpr.mttn@gmail.com</a></p>
           <p style="font-size: 12px; color: #777;">This email was sent automatically. Please do not reply.</p>
         </div>
       `,
