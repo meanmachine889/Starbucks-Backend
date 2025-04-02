@@ -148,7 +148,7 @@ router.get("/user", async (req, res) => {
 
 router.get("/get-users-length", async (req, res) => {
   try {
-    const length = await User.length();
+    const length = await User.countDocuments();
     res.status(200).json({length: length});
   } catch (error) {
     res.status(500).json({ error: error.message });
