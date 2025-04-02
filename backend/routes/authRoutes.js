@@ -101,7 +101,7 @@ router.post("/verify", async (req, res) => {
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; text-align: center; color: #333;">
           <h1 style="color: #006241;">Thanks for registering!</h1>
-          <p>Here is your ticket for MTTN x Starbucks Acoustic Night. Please arrive by 7:15 PM. Your booking will not be held past 7:30 PM.</p>
+          <p>Here is your ticket for MTTN x Starbucks Acoustic Night.<br/><strong>Please arrive by 7:15 PM. Your booking will not be held past 7:30 PM.</strong></p>
           <div style="margin: 20px 0;">
             <a href="${qrLink}" style="text-decoration: none;">
               <img src="cid:qrcode" alt="QR Code" style="width: 200px; height: 200px; border-radius: 10px;" />
